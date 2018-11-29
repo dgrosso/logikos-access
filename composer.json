@@ -5,10 +5,17 @@
         "name": "Todd Empcke",
         "email": "tempcke@logikostech.net"
     }],
+    "repositories": [
+        {
+            "url": "https://github.com/logikostech/database.git",
+            "type": "git"
+        }
+    ],
     "require": {
         "zendframework/zend-permissions-acl": "^2.7",
         "nette/database": "^2.4",
-        "logikos/util": "^2.2"
+        "logikos/util": "^2.2",
+        "logikos/database": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
