@@ -25,7 +25,6 @@ class zendTest extends TestCase {
     $this->acl
       ->addRole($roleA)
       ->addRole($roleB, 'A')
-      ->addRole($roleA, 'B')
       ->addResource($resource);
 
 
