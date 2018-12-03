@@ -3,9 +3,7 @@
 
 namespace LogikosTest\Access\Acl;
 
-use Exception;
 use Logikos\Database\Connection;
-use Logikos\Database\DbConfig;
 use LogikosTest\Access\Db;
 use LogikosTest\Access\TestCase as AccessTestCase;
 use Nette\Database\Helpers as DbHelpers;

@@ -9,11 +9,17 @@ class ResourceCollection extends \IteratorIterator implements ResourceIterator {
     return new static($sth);
   }
 
+  /**
+   * @return Resource
+   * @throws \Logikos\Util\CanNotMutateException
+   */
   public function current(): Resource {
     $row = parent::current();
-    return new ResourceEntity([
+    $resource = new ResourceEntity([
         'name' => $row['resource'],
         'description' => $row['description']
     ]);
+    /** @var Resource $resource */
+    return $resource;
   }
 }

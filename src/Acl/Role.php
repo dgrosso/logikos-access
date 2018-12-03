@@ -4,7 +4,7 @@
 namespace Logikos\Access\Acl;
 
 
-interface Resource {
+interface Role {
   public function name();
   public function description();
   public function __toString();

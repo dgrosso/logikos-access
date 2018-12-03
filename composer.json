@@ -12,6 +12,8 @@
         }
     ],
     "require": {
+        "php": "^7.0",
+        "ext-pdo": "*",
         "zendframework/zend-permissions-acl": "^2.7",
         "nette/database": "^2.4",
         "logikos/util": "^2.2",
