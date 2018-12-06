@@ -16,18 +16,39 @@ class ResourceTest extends TestCase {
   }
 
   public function testSetAndGetName() {
-    $r = new Resource(['name'=>'reports']);
+    $r = new Resource([
+        'name'=>'reports',
+        'privileges'=>[]
+    ]);
     Assert::assertEquals('reports', $r->name());
     Assert::assertInstanceOf(ResourceInterface::class, $r);
   }
 
   public function testSetAndGetDescription() {
-    $r = new Resource(['name'=>'reports', 'description'=>'foo']);
+    $r = new Resource([
+        'name'=>'reports',
+        'description'=>'foo',
+        'privileges'=>[]
+    ]);
     Assert::assertEquals('foo', $r->description());
   }
 
   public function testToString() {
-    $r = new Resource(['name'=>'foo']);
+    $r = new Resource([
+        'name'=>'foo',
+        'privileges'=>[]
+    ]);
     Assert::assertSame('foo', (string) $r);
+  }
+
+  public function testSetAndGetPrivileges() {
+    $r = new Resource([
+        'name'=>'reports',
+        'privileges'=>['read', 'schedule']
+    ]);
+    $this->assertEquals(
+        ['read', 'schedule'],
+        $r->privileges()->toArray()
+    );
   }
 }

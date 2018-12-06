@@ -44,3 +44,12 @@ CREATE TABLE role_privileges (
   FOREIGN KEY (resource)       REFERENCES resources(resource),
   FOREIGN KEY (privilege)      REFERENCES privileges(privilege)
 );
+
+DROP VIEW IF EXISTS resource_privileges;
+CREATE VIEW resource_privileges AS SELECT
+       r.resource,
+       r.description,
+       GROUP_CONCAT(p.privilege) privileges
+  FROM resources r
+  LEFT JOIN privileges p ON(p.resource=r.resource)
+  GROUP BY r.resource;

@@ -13,7 +13,8 @@ class ResourceCollection extends \IteratorIterator implements ResourceIterator {
     $row = parent::current();
     $resource = new ResourceEntity([
         'name' => $row['resource'],
-        'description' => $row['description']
+        'description' => $row['description'],
+        'privileges' => explode(',',$row['privileges'])
     ]);
     /** @var Resource $resource */
     return $resource;
