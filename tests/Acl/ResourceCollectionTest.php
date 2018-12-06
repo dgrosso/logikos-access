@@ -4,6 +4,7 @@ namespace LogikosTest\Access\Acl;
 
 use Logikos\Access\Acl\Resource;
 use Logikos\Access\Acl\ResourceCollection;
+use PHPUnit\Framework\Assert;
 
 class ResourceCollectionTest extends TestCase {
 
@@ -25,11 +26,11 @@ class ResourceCollectionTest extends TestCase {
     $found = [];
     foreach ($collection as $resource) {
       /** @var Resource $resource */
-      $this->assertInstanceOf(Resource::class, $resource);
-      $this->assertEmpty($resource->description());
+      Assert::assertInstanceOf(Resource::class, $resource);
+      Assert::assertEmpty($resource->description());
       array_push($found, $resource->name());
     }
-    $this->assertEquals($this->resources, $found);
+    Assert::assertEquals($this->resources, $found);
   }
 
   public function testBuildFromNetteResultSet() {
@@ -37,7 +38,7 @@ class ResourceCollectionTest extends TestCase {
     $collection = new ResourceCollection($sth);
 
     foreach ($collection as $resource) {
-      $this->assertInstanceOf(Resource::class, $resource);
+      Assert::assertInstanceOf(Resource::class, $resource);
     }
   }
 }
