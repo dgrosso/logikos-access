@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b125423584a56284928aeeae6ee556ba",
-    "content-hash": "1f51e2b99b898224c72d6d406d00d5dc",
+    "hash": "7a926cb9be00a85dbd62995f08e5a180",
+    "content-hash": "0887b0d3778cc0621168243426c77fbe",
     "packages": [
         {
             "name": "logikos/database",
@@ -2827,6 +2827,9 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^7.0",
+        "ext-pdo": "*"
+    },
     "platform-dev": []
 }
