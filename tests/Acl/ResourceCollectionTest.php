@@ -5,7 +5,6 @@ namespace LogikosTest\Access\Acl;
 use Logikos\Access\Acl\Entity\Resource as ResourceEntity;
 use Logikos\Access\Acl\Resource;
 use Logikos\Access\Acl\ResourceCollection;
-use Logikos\Util\Config\MutableConfig;
 use PHPUnit\Framework\Assert;
 
 class ResourceCollectionTest extends TestCase {
@@ -26,11 +25,11 @@ class ResourceCollectionTest extends TestCase {
   public function testBuildFromPdoStatement() {
     $sth = $this->db->pdoQuery("select * from resource_privileges");
 
-    $collection = ResourceCollection::buildFromPdoStatement($sth);
+    $collection = ResourceCollection::fromPdoStatement($sth);
 
     $found = [];
 
-    /** @var Resource $resource */
+    /** @var ResourceEntity $resource */
     foreach ($collection as $resource) {
       Assert::assertInstanceOf(Resource::class, $resource);
       Assert::assertEmpty($resource->description());
@@ -45,6 +44,36 @@ class ResourceCollectionTest extends TestCase {
 
     foreach ($collection as $resource) {
       Assert::assertInstanceOf(Resource::class, $resource);
+    }
+  }
+
+  public function testBuildFromArray() {
+    $data = [
+        ['resource'=>'dashboard', 'privileges'=>'login,add-widget'],
+        ['resource'=>'reports',   'privileges'=>'view,schedule'],
+        ['resource'=>'members']
+    ];
+    $collection = ResourceCollection::fromArray($data);
+
+    $found = [];
+    /** @var ResourceEntity $resource */
+    foreach ($collection as $resource) {
+      Assert::assertInstanceOf(Resource::class, $resource);
+      array_push($found, $resource->name());
+    }
+    self::assertArrayValuesEqual($this->resources, $found);
+  }
+
+  public function testWithArrayPrivileges() {
+    $data = [
+        ['resource'=>'reports',   'privileges'=>['view','schedule']]
+    ];
+    $collection = ResourceCollection::fromArray($data);
+
+    /** @var ResourceEntity $resource */
+    foreach ($collection as $resource) {
+      Assert::assertEquals('reports', $resource->name());
+      Assert::assertEquals(['view','schedule'], $resource->privileges()->toArray());
     }
   }
 }

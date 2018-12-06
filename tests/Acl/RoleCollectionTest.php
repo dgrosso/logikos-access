@@ -22,9 +22,11 @@ class RoleCollectionTest extends TestCase {
 
   public function testBuildFromPdoStatement() {
     $sth = $this->db->pdoQuery("select * from roles");
-    $collection = RoleCollection::buildFromPdoStatement($sth);
+    $collection = RoleCollection::fromPdoStatement($sth);
 
     $found = [];
+
+    /** @var Role $role */
     foreach ($collection as $role) {
       Assert::assertInstanceOf(Role::class, $role);
       array_push($found, $role->name());
@@ -40,5 +42,24 @@ class RoleCollectionTest extends TestCase {
       Assert::assertInstanceOf(Role::class, $resource);
     }
   }
+
+
+  public function testBuildFromArray() {
+    $data = [
+        ['role'=>'admin'],
+        ['role'=>'member'],
+        ['role'=>'guest', 'description'=>'foo']
+    ];
+    $collection = RoleCollection::fromArray($data);
+
+    $found = [];
+    /** @var Role $role */
+    foreach ($collection as $role) {
+      Assert::assertInstanceOf(Role::class, $role);
+      array_push($found, $role->name());
+    }
+    self::assertArrayValuesEqual($this->roles, $found);
+  }
+
 
 }
