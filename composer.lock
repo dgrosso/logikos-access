@@ -52,16 +52,16 @@
         },
         {
             "name": "logikos/util",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/logikostech/util.git",
-                "reference": "e643a3d44e60f73e8c03de68a6ce617329ed346f"
+                "reference": "72ae1f3020df0fed25eb422306518ebd31997bc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/logikostech/util/zipball/e643a3d44e60f73e8c03de68a6ce617329ed346f",
-                "reference": "e643a3d44e60f73e8c03de68a6ce617329ed346f",
+                "url": "https://api.github.com/repos/logikostech/util/zipball/72ae1f3020df0fed25eb422306518ebd31997bc7",
+                "reference": "72ae1f3020df0fed25eb422306518ebd31997bc7",
                 "shasum": ""
             },
             "require": {
@@ -90,7 +90,7 @@
             ],
             "description": "Utility Classes, including a config similar to Phalcon\\Config, MutableConfig and ImmutableConfig",
             "homepage": "https://github.com/logikostech/util",
-            "time": "2018-11-15 15:05:33"
+            "time": "2018-12-07 18:42:20"
         },
         {
             "name": "nette/caching",
@@ -2498,7 +2498,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.19",
+            "version": "v3.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -2567,16 +2567,16 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.19",
+            "version": "v3.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "2016b3eec2e49c127dd02d0ef44a35c53181560d"
+                "reference": "a2233f555ddf55e5600f386fba7781cea1cb82d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/2016b3eec2e49c127dd02d0ef44a35c53181560d",
-                "reference": "2016b3eec2e49c127dd02d0ef44a35c53181560d",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/a2233f555ddf55e5600f386fba7781cea1cb82d3",
+                "reference": "a2233f555ddf55e5600f386fba7781cea1cb82d3",
                 "shasum": ""
             },
             "require": {
@@ -2619,11 +2619,11 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-11 19:48:54"
+            "time": "2018-11-27 12:43:10"
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.19",
+            "version": "v3.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
