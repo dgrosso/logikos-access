@@ -6,7 +6,6 @@ namespace LogikosTest\Access\Acl;
 
 use Logikos\Access\Acl;
 use Logikos\Access\Acl\Config;
-use Logikos\Util\Config\InvalidConfigStateException;
 use PHPUnit\Framework\Assert;
 
 class ConfigTest extends TestCase {
@@ -28,15 +27,6 @@ class ConfigTest extends TestCase {
   public function testGrants() {
     // or rules
     $this->markTestSkipped('need to finish Rules first');
-  }
-
-  protected function assertFieldValidationFailed(Config $c, $field) {
-    try {
-      $c->validate(); // this should throw so the next line should never execute
-      $this->expectException(InvalidConfigStateException::class);
-    } catch (InvalidConfigStateException $e) {
-      Assert::assertContains($field, array_keys($e->getValidationMessages()));
-    }
   }
 
   private function assertClassHasConstant($class, $constant) {
