@@ -24,11 +24,6 @@ class ConfigTest extends TestCase {
     Assert::assertEquals(Acl::DENY, $c->defaultAction);
   }
 
-  public function testGrants() {
-    // or rules
-    $this->markTestSkipped('need to finish Rules first');
-  }
-
   private function assertClassHasConstant($class, $constant) {
     $classConstant = "{$class}::{$constant}";
     Assert::assertTrue(
