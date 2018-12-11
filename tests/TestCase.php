@@ -4,7 +4,7 @@
 namespace LogikosTest\Access;
 
 
-use Logikos\Access\Acl\Entity\InvalidEntityException;
+use Logikos\Access\Acl\InvalidEntityException;
 use Logikos\Util\Config\InvalidConfigStateException;
 use Logikos\Util\Config\StrictConfig as Config;
 use PHPUnit\Framework\Assert;
