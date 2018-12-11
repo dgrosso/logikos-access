@@ -2,19 +2,19 @@
 
 namespace Logikos\Access\Acl\Resource;
 
-use Logikos\Access\Acl\Resource\Resource as ResourceEntity;
 use Logikos\Access\Acl\Collection as BaseCollection;
+use Logikos\Access\Acl\Resource as ResourceInterface;
+use Logikos\Access\Acl\Resource\Resource as ResourceEntity;
 
 class Collection extends BaseCollection implements Iterator {
 
-  public function current(): Resource {
+  public function current(): ResourceInterface {
     $row = parent::current();
     $resource = new ResourceEntity([
         'name' => $row['resource'],
         'description' => $row['description']??'',
         'privileges' => $this->getPrivileges($row)
     ]);
-    /** @var Resource $resource */
     return $resource;
   }
 
