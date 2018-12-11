@@ -4,44 +4,52 @@
 namespace LogikosTest\Access\Acl\Adapter;
 
 
-use Logikos\Access\Acl\Adapter\Phalcon as PhalconAcl;
-use Logikos\Access\Acl\Resource\Collection as ResourceCollection;
+use Logikos\Access\Acl\Adapter\Phalcon as Acl;
+use Logikos\Access\Acl\Config as AclConfig;
+use Logikos\Access\Acl\Resource;
+use Logikos\Access\Acl\Role;
+use Logikos\Access\Acl\Rule;
+use Logikos\Util\Config\InvalidConfigStateException;
 use LogikosTest\Access\Acl\TestCase;
-use Phalcon\Acl\Adapter\Memory;
+use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 use PHPUnit\Framework\Assert;
 
 class PhalconTest extends TestCase {
 
-  const ROLES = ['admin', 'member', 'guest'];
 
-  const PRIVILEGES = [
-      'dashboard' => ['login', 'add-widget'],
-      'reports'   => ['read', 'schedule']
-  ];
-
-
-  /** @var PhalconAcl */
+  /** @var Acl */
   private $acl;
 
   public function setUp() {
     parent::setUp();
   }
 
-  protected function resources() {
-    $resources = [];
-    foreach (self::PRIVILEGES as $resource=>$privileges) {
-      array_push($resources, [
-          'resource'   => $resource,
-          'privileges' => $privileges
-      ]);
-    }
-    return $resources;
+  public function testBuildFromInvalidConfig() {
+    $this->expectException(InvalidConfigStateException::class);
+    Acl::buildFromConfig(new AclConfig());
   }
 
-  public function testFoo() {
-    $acl = new PhalconAcl();
-    $acl->withResources(ResourceCollection::fromArray($this->resources()));
-    $this->markTestSkipped('not done...');
+  public function testBuildFromConfig() {
+
+    $config = new AclConfig([
+        'roles' => Role\Collection::fromArray(self::ROLES),
+        'resources' => Resource\Collection::fromArray(self::RESOURCES),
+        'rules' => Rule\Collection::fromArray(self::RULES)
+    ]);
+
+    $acl = Acl::buildFromConfig($config);
+    Assert::assertInstanceOf(Acl::class, $acl);
+    Assert::assertInstanceOf(PhalconAcl::class, $acl);
+
+    foreach (self::ROLES as $r)
+      Assert::assertTrue($acl->isRole($r['role']), "Role {$r['role']} was not loaded...");
+
+
+    foreach (self::RESOURCES as $r)
+      Assert::assertTrue($acl->isResource($r['resource']), "Resource {$r['resource']} was not loaded...");
+
+    $this->markTestSkipped("rules?");
+
   }
 
   public function testSimpleInheritedAllow() {
@@ -72,14 +80,14 @@ class PhalconTest extends TestCase {
     Assert::assertTrue($acl->isAllowed('admin', 'dashboard', 'login'));
   }
 
-  private function phalconAcl(): Memory {
-    $acl = new Memory();
+  private function phalconAcl(): PhalconAcl {
+    $acl = new PhalconAcl();
 
-    foreach (self::PRIVILEGES as $resource => $privileges)
-      $acl->addResource($resource, $privileges);
+    foreach (self::RESOURCES as $resource)
+      $acl->addResource($resource['resource'], $resource['privileges']);
 
     foreach (self::ROLES as $role)
-      $acl->addRole($role);
+      $acl->addRole($role['role']);
 
     return $acl;
   }
