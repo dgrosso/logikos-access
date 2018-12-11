@@ -4,14 +4,7 @@ namespace Logikos\Access\Acl;
 
 use Logikos\Access\Acl\Entity\Resource as ResourceEntity;
 
-class ResourceCollection extends \IteratorIterator implements ResourceIterator {
-  public static function fromPdoStatement(\PDOStatement $sth) {
-    return new static($sth);
-  }
-
-  public static function fromArray(array $array) {
-    return new static(new \ArrayIterator($array));
-  }
+class ResourceCollection extends Collection implements ResourceIterator {
 
   public function current(): Resource {
     $row = parent::current();
