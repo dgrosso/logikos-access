@@ -48,7 +48,7 @@ class ResourceTest extends TestCase {
     ]);
     $this->assertEquals(
         ['read', 'schedule'],
-        $r->privileges()->toArray()
+        $r->privileges()
     );
   }
 }

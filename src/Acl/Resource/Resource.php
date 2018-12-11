@@ -32,7 +32,7 @@ class Resource extends Entity implements \Logikos\Access\Acl\Resource {
   }
 
   public function privileges() {
-    return $this->get('privileges', []);
+    return $this->get('privileges', [])->toArray();
   }
 
   /** @throws InvalidConfigStateException */

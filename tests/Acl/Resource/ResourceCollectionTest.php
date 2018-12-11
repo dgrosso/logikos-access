@@ -74,7 +74,7 @@ class ResourceCollectionTest extends TestCase {
     /** @var ResourceEntity $resource */
     foreach ($collection as $resource) {
       Assert::assertEquals('reports', $resource->name());
-      Assert::assertEquals(['view','schedule'], $resource->privileges()->toArray());
+      Assert::assertEquals(['view','schedule'], $resource->privileges());
     }
   }
 }
