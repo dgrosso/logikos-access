@@ -9,6 +9,24 @@ use LogikosTest\Access\TestCase as AccessTestCase;
 use Nette\Database\Helpers as DbHelpers;
 
 class TestCase extends AccessTestCase {
+
+  const ROLES = [
+      ['role' => 'admin'],
+      ['role' => 'member'],
+      ['role' => 'guest']
+  ];
+
+  const RESOURCES = [
+      ['resource' => 'dashboard', 'privileges' => ['login','add-widget']],
+      ['resource' => 'reports',   'privileges' => ['read','schedule']]
+  ];
+
+  const RULES = [
+      ['role' => 'admin',  'resource' => 'reports', 'privilege' => 'read'],
+      ['role' => 'admin',  'resource' => 'reports', 'privilege' => 'schedule'],
+      ['role' => 'member', 'resource' => 'reports', 'privilege' => 'read'],
+  ];
+
   /** @var Connection */
   protected $db;
 

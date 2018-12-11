@@ -7,6 +7,7 @@ namespace LogikosTest\Access;
 use Logikos\Access\Acl\InvalidEntityException;
 use Logikos\Util\Config\InvalidConfigStateException;
 use Logikos\Util\Config\StrictConfig as Config;
+use LogikosTest\Access\Acl\FixtureData;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
@@ -17,6 +18,14 @@ class TestCase extends PHPUnitTestCase {
     sort($expected);
     sort($actual);
     Assert::AssertEquals($expected, $actual);
+  }
+
+  public static function assertClassHasConstant($class, $constant) {
+    $classConstant = "{$class}::{$constant}";
+    Assert::assertTrue(
+        defined($classConstant),
+        "Failed to assert Constant exists: {$classConstant}"
+    );
   }
 
   protected function assertFieldValidationFailed(Config $c, $field) {
