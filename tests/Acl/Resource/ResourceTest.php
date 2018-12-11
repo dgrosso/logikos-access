@@ -3,7 +3,7 @@
 
 namespace LogikosTest\Access\Acl\Entity;
 
-use Logikos\Access\Acl\Entity\InvalidEntityException;
+use Logikos\Access\Acl\InvalidEntityException;
 use Logikos\Access\Acl\Resource\Resource;
 use Logikos\Access\Acl\Resource as ResourceInterface;
 use LogikosTest\Access\Acl\TestCase;

@@ -1,11 +1,12 @@
 <?php
 
 
-namespace LogikosTest\Access\Acl;
+namespace LogikosTest\Access\Acl\Role;
 
 
 use Logikos\Access\Acl\Role;
-use Logikos\Access\Acl\RoleCollection;
+use Logikos\Access\Acl\Role\Collection;
+use LogikosTest\Access\Acl\TestCase;
 use PHPUnit\Framework\Assert;
 
 class RoleCollectionTest extends TestCase {
@@ -22,7 +23,7 @@ class RoleCollectionTest extends TestCase {
 
   public function testBuildFromPdoStatement() {
     $sth = $this->db->pdoQuery("select * from roles");
-    $collection = RoleCollection::fromPdoStatement($sth);
+    $collection = Collection::fromPdoStatement($sth);
 
     $found = [];
 
@@ -36,7 +37,7 @@ class RoleCollectionTest extends TestCase {
 
   public function testBuildFromNetteResultSet() {
     $sth = $this->db->selectWhere('roles', 'role, description', []);
-    $collection = new RoleCollection($sth);
+    $collection = new Collection($sth);
 
     foreach ($collection as $resource) {
       Assert::assertInstanceOf(Role::class, $resource);
@@ -50,7 +51,7 @@ class RoleCollectionTest extends TestCase {
         ['role'=>'member'],
         ['role'=>'guest', 'description'=>'foo']
     ];
-    $collection = RoleCollection::fromArray($data);
+    $collection = Collection::fromArray($data);
 
     $found = [];
     /** @var Role $role */

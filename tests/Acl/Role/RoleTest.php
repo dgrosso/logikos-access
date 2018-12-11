@@ -1,11 +1,11 @@
 <?php
 
 
-namespace LogikosTest\Access\Acl\Entity;
+namespace LogikosTest\Access\Acl\Role;
 
 
-use Logikos\Access\Acl\Entity\InvalidEntityException;
-use Logikos\Access\Acl\Entity\Role;
+use Logikos\Access\Acl\InvalidEntityException;
+use Logikos\Access\Acl\Role\Role;
 use LogikosTest\Access\Acl\TestCase;
 
 class RoleTest extends TestCase {

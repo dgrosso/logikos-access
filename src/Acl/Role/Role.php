@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Logikos\Access\Acl\Entity;
+namespace Logikos\Access\Acl\Role;
 
 use Logikos\Access\Acl\Entity;
 use Logikos\Access\Acl\Role as RoleInterface;

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace LogikosTest\Access\Acl\Entity;
+namespace LogikosTest\Access\Acl;
 
 
-use Logikos\Access\Acl\Entity\InvalidEntityException;
+use Logikos\Access\Acl\InvalidEntityException;
 use Logikos\Access\Acl\Resource\Resource;
 use LogikosTest\Access\Acl\TestCase;
 
