@@ -1,10 +1,11 @@
 <?php
 
-namespace LogikosTest\Access\Acl;
+namespace LogikosTest\Access\Acl\Resource;
 
-use Logikos\Access\Acl\Entity\Resource as ResourceEntity;
+use Logikos\Access\Acl\Resource\Resource as ResourceEntity;
 use Logikos\Access\Acl\Resource;
-use Logikos\Access\Acl\ResourceCollection;
+use Logikos\Access\Acl\Resource\Collection as ResourceCollection;
+use LogikosTest\Access\Acl\TestCase;
 use PHPUnit\Framework\Assert;
 
 class ResourceCollectionTest extends TestCase {

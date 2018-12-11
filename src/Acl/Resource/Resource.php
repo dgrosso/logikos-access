@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Logikos\Access\Acl\Entity;
+namespace Logikos\Access\Acl\Resource;
 
 use Logikos\Access\Acl\Entity;
 use Logikos\Util\Config\Field\Field;

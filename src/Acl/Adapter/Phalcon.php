@@ -3,7 +3,7 @@
 
 namespace Logikos\Access\Acl\Adapter;
 
-use Logikos\Access\Acl\ResourceIterator;
+use Logikos\Access\Acl\Resource\Iterator as ResourceIterator;
 use Logikos\Access\Acl\RoleIterator;
 use Phalcon\Acl\Adapter\Memory as MemoryAdapter;
 

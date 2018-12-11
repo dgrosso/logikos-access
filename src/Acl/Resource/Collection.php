@@ -1,10 +1,11 @@
 <?php
 
-namespace Logikos\Access\Acl;
+namespace Logikos\Access\Acl\Resource;
 
-use Logikos\Access\Acl\Entity\Resource as ResourceEntity;
+use Logikos\Access\Acl\Resource\Resource as ResourceEntity;
+use Logikos\Access\Acl\Collection as BaseCollection;
 
-class ResourceCollection extends Collection implements ResourceIterator {
+class Collection extends BaseCollection implements Iterator {
 
   public function current(): Resource {
     $row = parent::current();

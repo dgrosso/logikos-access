@@ -5,6 +5,7 @@ namespace Logikos\Access\Acl;
 
 
 use Logikos\Access\Acl;
+use Logikos\Access\Acl\Resource\Iterator as ResourceIterator;
 use Logikos\Util\Config\Field\Field;
 use Logikos\Util\Config\StrictConfig;
 use Logikos\Util\Validation\Validator;

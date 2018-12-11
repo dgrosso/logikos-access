@@ -5,7 +5,7 @@ namespace LogikosTest\Access\Acl\Adapter;
 
 
 use Logikos\Access\Acl\Adapter\Phalcon as PhalconAcl;
-use Logikos\Access\Acl\ResourceCollection;
+use Logikos\Access\Acl\Resource\Collection as ResourceCollection;
 use LogikosTest\Access\Acl\TestCase;
 use Phalcon\Acl\Adapter\Memory;
 use PHPUnit\Framework\Assert;
