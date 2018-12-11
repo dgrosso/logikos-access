@@ -1,8 +1,7 @@
 <?php
 
 
-namespace Logikos\Access\Acl\Entity;
-
+namespace Logikos\Access\Acl\Rule;
 
 use Logikos\Access\Acl;
 use Logikos\Access\Acl\Entity;
@@ -11,6 +10,8 @@ use Logikos\Util\Config\Field\Field;
 use Logikos\Util\Validation\Validator\Callback;
 
 class Rule extends Entity implements RuleInterface {
+
+  const STRING_FORMAT = "%s:%s@%s!%s";
 
   public function role() {
     return $this->get('role');
@@ -26,6 +27,16 @@ class Rule extends Entity implements RuleInterface {
 
   public function access() {
     return $this->get('access');
+  }
+
+  public function __toString() {
+    return sprintf(
+        self::STRING_FORMAT,
+        $this->access() == Acl::ALLOW ? "ALLOW" : "DENY",
+        $this->role(),
+        $this->resource(),
+        $this->privilege()
+    );
   }
 
   protected function defaults(): array {
