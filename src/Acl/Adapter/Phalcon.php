@@ -9,7 +9,7 @@ use Logikos\Util\Config\InvalidConfigStateException;
 use Logikos\Util\Config\MutableConfig;
 use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 
-class Phalcon extends PhalconAcl {
+class Phalcon extends PhalconAcl Implements Acl\Adapter {
 
   /** @var MutableConfig */
   private $ltAclConf;
@@ -23,7 +23,7 @@ class Phalcon extends PhalconAcl {
     return $this->ltAclConf ?: $this->ltAclConf = new MutableConfig();
   }
 
-  public static function buildFromConfig(Config $config) {
+  public static function buildFromConfig(Config $config): Acl\Adapter {
     self::validateConfig($config);
 
     $self = new static();

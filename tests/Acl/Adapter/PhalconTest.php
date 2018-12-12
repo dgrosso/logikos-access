@@ -9,8 +9,6 @@ use Logikos\Access\Acl\Config as AclConfig;
 use Logikos\Access\Acl\Resource;
 use Logikos\Access\Acl\Role;
 use Logikos\Access\Acl\Rule;
-use Logikos\Access\ConfigException;
-use LogikosTest\Access\Acl\TestCase;
 use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 use PHPUnit\Framework\Assert;
 
@@ -18,49 +16,6 @@ class PhalconTest extends TestCase {
 
   public function setUp() {
     parent::setUp();
-  }
-
-  public function testBuildFromInvalidConfig() {
-    $this->expectException(ConfigException::class);
-    Acl::buildFromConfig(new AclConfig());
-  }
-
-  public function testDefaultActionIsDeny() {
-    $acl = new Acl;
-    Assert::assertInstanceOf(Acl::class, $acl);
-    Assert::assertInstanceOf(PhalconAcl::class, $acl);
-    Assert::assertSame(\Logikos\Access\Acl::DENY, $acl->getDefaultAction());
-  }
-
-  public function testAclLoadsRolesFromConfig() {
-    $acl = $this->acl();
-
-    foreach (self::ROLES as $r)
-      Assert::assertTrue($acl->isRole($r['role']), "Role {$r['role']} was not loaded...");
-  }
-
-  public function testAclLoadsResourcesFromConfig() {
-    $acl = $this->acl();
-
-    foreach (self::RESOURCES as $r)
-      Assert::assertTrue($acl->isResource($r['resource']), "Resource {$r['resource']} was not loaded...");
-  }
-
-  public function testAclLoadsRulesFromConfig() {
-    $acl = $this->acl();
-
-    foreach (self::RULES as $r) {
-      Assert::assertTrue($acl->isAllowed(
-          $r['role'],
-          $r['resource'],
-          $r['privilege']
-      ));
-      Assert::assertFalse($acl->isAllowed(
-          'guest',
-          $r['resource'],
-          $r['privilege']
-      ));
-    }
   }
 
   public function testSimpleInheritedAllow() {
@@ -103,15 +58,7 @@ class PhalconTest extends TestCase {
     return $acl;
   }
 
-  protected function acl(): Acl {
-    $config = new AclConfig(
-        [
-            'roles'     => Role\Collection::fromArray(self::ROLES),
-            'resources' => Resource\Collection::fromArray(self::RESOURCES),
-            'rules'     => Rule\Collection::fromArray(self::RULES)
-        ]
-    );
-
-    return Acl::buildFromConfig($config);
+  protected function acl() {
+    return Acl::buildFromConfig($this->AclConfig());
   }
 }
