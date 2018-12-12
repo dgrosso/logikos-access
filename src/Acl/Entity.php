@@ -14,11 +14,10 @@ abstract class Entity extends StrictConfig {
       parent::validate();
     }
     catch (InvalidConfigStateException $e) {
-      throw new InvalidEntityException($this, $e);
+      throw new InvalidEntityException($e);
     }
   }
 
-  /** @throws InvalidConfigStateException */
   protected function initialize() {
     $this->validate();
     $this->lock();
