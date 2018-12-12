@@ -5,10 +5,6 @@ namespace LogikosTest\Access\Acl\Adapter;
 
 
 use Logikos\Access\Acl\Adapter\Phalcon as Acl;
-use Logikos\Access\Acl\Config as AclConfig;
-use Logikos\Access\Acl\Resource;
-use Logikos\Access\Acl\Role;
-use Logikos\Access\Acl\Rule;
 use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 use PHPUnit\Framework\Assert;
 

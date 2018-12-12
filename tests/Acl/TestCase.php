@@ -13,7 +13,10 @@ class TestCase extends AccessTestCase {
   const ROLES = [
       ['role' => 'admin'],
       ['role' => 'member'],
-      ['role' => 'guest']
+      ['role' => 'guest'],
+      ['role' => 'fred'],
+      ['role' => 'bob'],
+      ['role' => 'bill']
   ];
 
   const RESOURCES = [
@@ -25,6 +28,13 @@ class TestCase extends AccessTestCase {
       ['role' => 'admin',  'resource' => 'reports', 'privilege' => 'read'],
       ['role' => 'admin',  'resource' => 'reports', 'privilege' => 'schedule'],
       ['role' => 'member', 'resource' => 'reports', 'privilege' => 'read'],
+  ];
+
+  const INHERITED_ROLES = [
+      ['role' => 'fred', 'inherits' => 'member'],
+      ['role' => 'bob',  'inherits' => 'member'],
+      ['role' => 'bob',  'inherits' => 'admin'],
+      ['role' => 'bill', 'inherits' => 'member,admin']
   ];
 
   /** @var Connection */
