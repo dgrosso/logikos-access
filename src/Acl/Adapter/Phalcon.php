@@ -32,6 +32,7 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
     self::loadRoles($self, $config);
     self::loadResources($self, $config);
     self::loadRules($self, $config);
+    self::loadInherits($self, $config);
 
     return $self;
   }
@@ -61,6 +62,16 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
       $self->allow($r->role(), $r->resource(), $r->privilege());
     }
     $self->_config()->set('rules', $rules);
+  }
+
+  protected static function loadInherits(Phalcon $self, Config $config) {
+    $inherits = [];
+    foreach ($config->inherits as $r) {
+      $iroles = array_merge($inherits[$r->role()] ?? [], $r->inherits());
+      $inherits[$r->role()] = $iroles;
+      foreach($r->inherits() as $iRole)
+        $self->addInherit($r->role(), $iRole);
+    }
   }
 
   protected static function validateConfig(Config $config) {

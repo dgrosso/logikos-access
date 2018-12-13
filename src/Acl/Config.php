@@ -6,6 +6,7 @@ namespace Logikos\Access\Acl;
 
 use Logikos\Access\Acl;
 use Logikos\Util\Config\Field\Field;
+use Logikos\Util\Config\Field\OptionalField;
 use Logikos\Util\Config\StrictConfig;
 use Logikos\Util\Validation\Validator;
 
@@ -13,9 +14,10 @@ use Logikos\Util\Validation\Validator;
  * Class Config
  * @package Logikos\Access\Acl
  * @property Resource\Iterator $resources
- * @property Role\Iterator $roles
- * @property Rule\Iterator $rules
- * @property $defaultAction
+ * @property Role\Iterator     $roles
+ * @property Rule\Iterator     $rules
+ * @property Inherits\Iterator $inherits
+ * @property int               $defaultAction
  */
 class Config extends StrictConfig {
 
@@ -29,6 +31,10 @@ class Config extends StrictConfig {
 
   public function withRules(Rule\Iterator $rules) {
     $this->rules = $rules;
+  }
+
+  public function withInherits(Inherits\Iterator $inherits) {
+    $this->inherits = $inherits;
   }
 
   protected function defaults(): array {
@@ -50,6 +56,14 @@ class Config extends StrictConfig {
         Field::withValidators(
             'resources',
             new Validator\IsInstanceOf(Resource\Iterator::class)
+        ),
+        OptionalField::withValidators(
+            'rules',
+            new Validator\IsInstanceOf(Rule\Iterator::class)
+        ),
+        OptionalField::withValidators(
+            'inherits',
+            new Validator\IsInstanceOf(Inherits\Iterator::class)
         ),
         new Field('defaultAction')
     );

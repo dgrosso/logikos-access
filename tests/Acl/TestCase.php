@@ -16,7 +16,7 @@ class TestCase extends AccessTestCase {
       ['role' => 'guest'],
       ['role' => 'fred'],
       ['role' => 'bob'],
-      ['role' => 'bill']
+      ['role' => 'ken']
   ];
 
   const RESOURCES = [
@@ -34,7 +34,7 @@ class TestCase extends AccessTestCase {
       ['role' => 'fred', 'inherits' => 'member'],
       ['role' => 'bob',  'inherits' => 'member'],
       ['role' => 'bob',  'inherits' => 'admin'],
-      ['role' => 'bill', 'inherits' => 'member,admin']
+      ['role' => 'ken',  'inherits' => 'member,admin']
   ];
 
   /** @var Connection */

@@ -7,13 +7,15 @@ namespace LogikosTest\Access\Acl\Adapter;
 use Logikos\Access\Acl;
 use Logikos\Access\Acl\Adapter;
 use Logikos\Access\Acl\Config as AclConfig;
+use Logikos\Access\Acl\Inherits;
 use Logikos\Access\Acl\Resource;
 use Logikos\Access\Acl\Role;
 use Logikos\Access\Acl\Rule;
 use Logikos\Access\ConfigException;
+use LogikosTest\Access\Acl\TestCase as AclTestCase;
 use PHPUnit\Framework\Assert;
 
-abstract class TestCase extends \LogikosTest\Access\Acl\TestCase {
+abstract class TestCase extends AclTestCase {
   /** @return Adapter */
   abstract protected function acl();
 
@@ -46,17 +48,37 @@ abstract class TestCase extends \LogikosTest\Access\Acl\TestCase {
     $acl = $this->acl();
 
     foreach (self::RULES as $r) {
-      Assert::assertTrue($acl->isAllowed(
-          $r['role'],
-          $r['resource'],
-          $r['privilege']
-      ));
-      Assert::assertFalse($acl->isAllowed(
-          'guest',
-          $r['resource'],
-          $r['privilege']
-      ));
+      $this->assertIsAllowed($acl, $r['role'], $r['resource'], $r['privilege']);
+      $this->assertIsNotAllowed($acl, 'guest', $r['resource'], $r['privilege']);
     }
+  }
+
+  public function testAclLoadsInheritedRoles() {
+    $acl = $this->acl();
+
+    foreach (self::INHERITED_ROLES as $r) {
+      $this->assertIsAllowed($acl, 'fred', 'reports', 'read');
+      $this->assertIsNotAllowed($acl, 'fred', 'reports', 'schedule');
+
+      $this->assertIsAllowed($acl, 'bob', 'reports', 'read');
+      $this->assertIsAllowed($acl, 'bob', 'reports', 'schedule');
+      $this->assertIsAllowed($acl, 'ken', 'reports', 'read');
+      $this->assertIsAllowed($acl, 'ken', 'reports', 'schedule');
+    }
+  }
+
+  protected function assertIsAllowed(Adapter $acl, $role, $resource, $privilege) {
+    Assert::assertTrue(
+        $acl->isAllowed($role, $resource, $privilege),
+        "{$role} should have access to {$resource}!{$privilege} but doesn't"
+    );
+  }
+
+  protected function assertIsNotAllowed(Adapter $acl, $role, $resource, $privilege) {
+    Assert::assertFalse(
+        $acl->isAllowed($role, $resource, $privilege),
+        "{$role} should not have access to {$resource}!{$privilege} but does"
+    );
   }
 
 
@@ -65,7 +87,8 @@ abstract class TestCase extends \LogikosTest\Access\Acl\TestCase {
         [
             'roles'     => Role\Collection::fromArray(self::ROLES),
             'resources' => Resource\Collection::fromArray(self::RESOURCES),
-            'rules'     => Rule\Collection::fromArray(self::RULES)
+            'rules'     => Rule\Collection::fromArray(self::RULES),
+            'inherits'  => Inherits\Collection::fromArray(self::INHERITED_ROLES)
         ]
     );
     return $config;
