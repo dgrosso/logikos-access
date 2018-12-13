@@ -35,6 +35,16 @@ class RoleCollectionTest extends TestCase {
     Assert::assertEquals($this->roles, $found);
   }
 
+  public function testConstructFromPdoStatementCanIterateMoreThanOnce() {
+    $sth = $this->db->pdoQuery("select * from roles");
+    $collection = new Collection($sth);
+    $c1 = $c2 = 0;
+    foreach($collection as $r1) $c1++;
+    foreach($collection as $r2) $c2++;
+    Assert::assertGreaterThanOrEqual(1, $c1);
+    Assert::assertEquals($c1, $c2);
+  }
+
   public function testBuildFromNetteResultSet() {
     $sth = $this->db->selectWhere('roles', 'role, description', []);
     $collection = new Collection($sth);
