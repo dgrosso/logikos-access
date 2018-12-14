@@ -20,7 +20,7 @@ class Role extends Entity implements RoleInterface {
     return $self;
   }
 
-  private static function makeInherits($inherits): array {
+  public static function makeInherits($inherits): array {
     if (is_array($inherits)) return $inherits;
     if (is_string($inherits)) return explode(',', $inherits);
     return [];

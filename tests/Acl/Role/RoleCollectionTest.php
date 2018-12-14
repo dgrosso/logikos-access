@@ -59,7 +59,7 @@ class RoleCollectionTest extends TestCase {
     $data = [
         ['role'=>'admin'],
         ['role'=>'member'],
-        ['role'=>'guest', 'description'=>'foo']
+        ['role'=>'guest', 'description'=>'foo'],
     ];
     $collection = Collection::fromArray($data);
 
@@ -70,6 +70,25 @@ class RoleCollectionTest extends TestCase {
       array_push($found, $role->name());
     }
     self::assertArrayValuesEqual($this->roles, $found);
+  }
+
+  public function testWithInherits() {
+    $data = [
+        ['role'=>'admin'],
+        ['role'=>'member'],
+        ['role'=>'bob', 'inherits'=>'admin,member'],
+        ['role'=>'ben', 'inherits'=>['admin','member']]
+    ];
+
+    $collection = Collection::fromArray($data);
+    /** @var Role $role */
+    foreach ($collection as $role) {
+      if (in_array($role->name(), ['admin', 'member']))
+        Assert::assertEmpty($role->inherits());
+      else
+        $this->assertArrayValuesEqual(['admin', 'member'], $role->inherits());
+    }
+
   }
 
 
