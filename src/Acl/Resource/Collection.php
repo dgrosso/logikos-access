@@ -2,7 +2,7 @@
 
 namespace Logikos\Access\Acl\Resource;
 
-use Logikos\Access\Acl\Collection as BaseCollection;
+use Logikos\Access\Acl\BaseCollection as BaseCollection;
 use Logikos\Access\Acl\Resource as ResourceInterface;
 use Logikos\Access\Acl\Resource\Resource as ResourceEntity;
 

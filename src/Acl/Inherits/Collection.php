@@ -4,7 +4,7 @@
 namespace Logikos\Access\Acl\Inherits;
 
 
-use Logikos\Access\Acl\Collection as BaseCollection;
+use Logikos\Access\Acl\BaseCollection as BaseCollection;
 use Logikos\Access\Acl\Inherits as InheritsInterface;
 
 class Collection extends BaseCollection implements Iterator {

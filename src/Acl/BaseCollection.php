@@ -6,7 +6,7 @@ namespace Logikos\Access\Acl;
 use Iterator;
 use Traversable;
 
-abstract class Collection extends \IteratorIterator implements Iterator {
+abstract class BaseCollection extends \IteratorIterator implements Iterator {
 
   public function __construct(Traversable $iterator) {
     if (is_object($iterator) && $iterator instanceof \PDOStatement)
@@ -20,6 +20,7 @@ abstract class Collection extends \IteratorIterator implements Iterator {
     return self::fromArray(self::PdoSthToArray($sth));
   }
 
+  /** @return BaseCollection */
   public static function fromArray(array $array) {
     return new static(new \ArrayIterator($array));
   }
