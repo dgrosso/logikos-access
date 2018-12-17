@@ -91,5 +91,33 @@ class RoleCollectionTest extends TestCase {
 
   }
 
+  public function testFromArrayOfRoles() {
+    /** @var Role\Role[] $data */
+    $data = [
+        'A' => Role\Role::build('A'),
+        'B' => Role\Role::build('B'),
+        'C' => Role\Role::build('C', 'A'),
+        'D' => Role\Role::build('D', 'A,B'),
+        'E' => Role\Role::build('E', ['A','B'])
+    ];
+
+    /** @var Role\Role[] $collection */
+    $collection = Collection::fromArray($data);
+    foreach ($collection as $role) {
+      $r = $data[$role->name()];
+      $expected = [
+          'name' => $r->name(),
+          'description' => $r->description(),
+          'inherits' => $r->inherits()
+      ];
+      $actual = [
+          'name' => $role->name(),
+          'description' => $role->description(),
+          'inherits' => $role->inherits()
+      ];
+      $this->assertEquals($expected, $actual);
+    }
+  }
+
 
 }
