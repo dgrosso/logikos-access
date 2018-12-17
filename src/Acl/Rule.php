@@ -9,5 +9,6 @@ interface Rule {
   public function resource();
   public function privilege();
   public function access();
+  public function toArray();
   public function __toString();
 }
