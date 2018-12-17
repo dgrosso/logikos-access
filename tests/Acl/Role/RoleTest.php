@@ -34,6 +34,12 @@ class RoleTest extends TestCase {
     $this->assertSame('System Administrator', $r->description());
   }
 
+  public function testUseRoleIndexAsAliasToName() {
+    $r = new ROle(['role'=>'member']);
+    $r->validate();
+    $this->assertSame('member', $r->name());
+  }
+
   public function testBuildWithName() {
     $r = Role::build('member');
     $this->assertInstanceOf(Role::class, $r);
@@ -48,6 +54,7 @@ class RoleTest extends TestCase {
   public function testBuildWithInherits() {
     $r = Role::build('member', 'roleA');
     $this->assertArrayValuesEqual(['roleA'], $r->inherits());
+    $this->assertEquals(['name'=>'member','inherits'=>['roleA']], $r->toArray());
   }
 
   public function testBuildWithInheritsAsArray() {

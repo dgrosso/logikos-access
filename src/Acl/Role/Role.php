@@ -35,7 +35,7 @@ class Role extends Entity implements RoleInterface {
   }
 
   public function description() {
-    return $this->get('description', null);
+    return $this->get('description', '');
   }
 
   public function inherits() {
@@ -43,6 +43,9 @@ class Role extends Entity implements RoleInterface {
   }
 
   protected function initialize() {
+    if ($this->has('role') && !$this->has('name')) {
+      $this->name = $this->role;
+    }
     $this->addFields(
         new Field('name'),
         new OptionalField('description'),
