@@ -39,6 +39,7 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
 
   private static function loadRoles(Phalcon $self, Config $config) {
     $roles = [];
+    $inherits = [];
     foreach ($config->roles as $r) {
       $roles[$r->name()] = $r;
       $self->addRole($r->name());
@@ -66,11 +67,20 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
 
   protected static function loadInherits(Phalcon $self, Config $config) {
     $inherits = [];
-    foreach ($config->inherits as $r) {
-      $iroles = array_merge($inherits[$r->role()] ?? [], $r->inherits());
-      $inherits[$r->role()] = $iroles;
-      foreach($r->inherits() as $iRole)
-        $self->addInherit($r->role(), $iRole);
+    if ($config->has('inherits')) {
+      /** @var Acl\Inherits $i */
+      foreach ($config->inherits as $i) {
+        $iRoles = array_merge($inherits[$i->role()] ?? [], $i->inherits());
+        $inherits[$i->role()] = $iRoles;
+        foreach ($i->inherits() as $iRole)
+          $self->addInherit($i->role(), $iRole);
+      }
+    }
+
+    /** @var Acl\Role $r */
+    foreach ($self->_config()->roles as $r) {
+      foreach ($r->inherits() as $iRole)
+        $self->addInherit($r->name(), $iRole);
     }
   }
 
