@@ -16,11 +16,18 @@ abstract class BaseCollection extends \IteratorIterator implements Iterator {
       parent::__construct($iterator);
   }
 
+  public function toArray() {
+    $rows = [];
+    foreach ($this as $entity) {
+      array_push($rows, $entity->toArray());
+    }
+    return $rows;
+  }
+
   public static function fromPdoStatement(\PDOStatement $sth) {
     return self::fromArray(self::PdoSthToArray($sth));
   }
 
-  /** @return BaseCollection */
   public static function fromArray(array $array) {
     return new static(new \ArrayIterator($array));
   }
