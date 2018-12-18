@@ -5,22 +5,52 @@ namespace Logikos\Access\Acl\Adapter;
 
 use Logikos\Access\Acl;
 use Logikos\Access\Acl\Config;
+use Logikos\Access\Acl\Role;
+use Logikos\Access\Acl\Resource;
 use Logikos\Util\Config\InvalidConfigStateException;
 use Logikos\Util\Config\MutableConfig;
 use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 
-class Phalcon extends PhalconAcl Implements Acl\Adapter {
+class Phalcon Implements Acl\Adapter {
+
+  /** @var PhalconAcl */
+  private $phalconAcl;
 
   /** @var MutableConfig */
   private $ltAclConf;
 
   public function __construct() {
-    parent::__construct();
+    $this->phalconAcl = new PhalconAcl();
     $this->setDefaultAction(Acl::DENY);
   }
 
-  protected function _config(): MutableConfig {
-    return $this->ltAclConf ?: $this->ltAclConf = new MutableConfig();
+  public function setDefaultAction($action) {
+    $this->phalconAcl->setDefaultAction($action);
+  }
+
+  public function getDefaultAction() {
+    return $this->phalconAcl->getDefaultAction();
+  }
+
+  public function isAllowed($role, $resource, $privilege) {
+    return $this->phalconAcl->isAllowed($role, $resource, $privilege);
+  }
+
+  public function isRole($role) {
+    return $this->phalconAcl->isRole($role);
+  }
+
+  public function isResource($resource) {
+    return $this->phalconAcl->isResource($resource);
+  }
+
+  public function getResources(): Resource\Collection {
+    $resources = $this->_config()->get('resources',[]);
+    return Resource\Collection::fromArray(
+        $resources instanceof \Logikos\Util\Config
+            ? $resources->toArray()
+            : $resources
+    );
   }
 
   public static function buildFromConfig(Config $config): Acl\Adapter {
@@ -37,12 +67,16 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
     return $self;
   }
 
-  private static function loadRoles(Phalcon $self, Config $config) {
+  protected function _config(): MutableConfig {
+    return $this->ltAclConf ?: $this->ltAclConf = new MutableConfig();
+  }
+
+  protected static function loadRoles(Phalcon $self, Config $config) {
     $roles = [];
     $inherits = [];
     foreach ($config->roles as $r) {
       $roles[$r->name()] = $r;
-      $self->addRole($r->name());
+      $self->phalconAcl->addRole($r->name());
     }
     $self->_config()->set('roles', $roles);
   }
@@ -51,7 +85,7 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
     $resources = [];
     foreach ($config->resources as $r) {
       $resources[$r->name()] = $r;
-      $self->addResource($r->name(), $r->privileges());
+      $self->phalconAcl->addResource($r->name(), $r->privileges());
     }
     $self->_config()->set('resources', $resources);
   }
@@ -60,7 +94,7 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
     $rules = [];
     foreach ($config->rules as $r) {
       $rules[$r->__toString()] = $r;
-      $self->allow($r->role(), $r->resource(), $r->privilege());
+      $self->phalconAcl->allow($r->role(), $r->resource(), $r->privilege());
     }
     $self->_config()->set('rules', $rules);
   }
@@ -73,14 +107,14 @@ class Phalcon extends PhalconAcl Implements Acl\Adapter {
         $iRoles = array_merge($inherits[$i->role()] ?? [], $i->inherits());
         $inherits[$i->role()] = $iRoles;
         foreach ($i->inherits() as $iRole)
-          $self->addInherit($i->role(), $iRole);
+          $self->phalconAcl->addInherit($i->role(), $iRole);
       }
     }
 
     /** @var Acl\Role $r */
     foreach ($self->_config()->roles as $r) {
       foreach ($r->inherits() as $iRole)
-        $self->addInherit($r->name(), $iRole);
+        $self->phalconAcl->addInherit($r->name(), $iRole);
     }
   }
 
