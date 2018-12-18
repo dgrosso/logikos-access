@@ -10,12 +10,13 @@ class Collection extends BaseCollection implements Iterator {
 
   public function current(): ResourceInterface {
     $row = parent::current();
-    $resource = new ResourceEntity([
-        'name' => $row['resource'],
+    if ($row instanceof ResourceEntity) return $row;
+
+    return new ResourceEntity([
+        'name' => $row['resource'] ?? $row['name'],
         'description' => $row['description']??'',
         'privileges' => $this->getPrivileges($row)
     ]);
-    return $resource;
   }
 
   private function getPrivileges($row) {

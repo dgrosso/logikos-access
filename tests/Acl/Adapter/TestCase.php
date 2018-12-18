@@ -67,6 +67,15 @@ abstract class TestCase extends AclTestCase {
     }
   }
 
+
+  public function testGetResources() {
+    $acl = $this->acl();
+    $resources = $acl->getResources();
+    Assert::assertInstanceOf(Resource\Collection::class, $resources);
+    Assert::assertSame(count(self::RESOURCES), count($resources->toArray()));
+  }
+
+
   protected function assertIsAllowed(Adapter $acl, $role, $resource, $privilege) {
     Assert::assertTrue(
         $acl->isAllowed($role, $resource, $privilege),
