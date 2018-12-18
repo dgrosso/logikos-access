@@ -127,6 +127,37 @@ class CollectionBuilderTest extends TestCase {
     $this->assertEquals($expected, $inCollection);
   }
 
+
+  public function testRollCollection() {
+    $b = new Role\CollectionBuilder();
+    $b->addRolesFromArray(self::ROLES);
+
+    $expected = [
+        ["inherits" => [], "name" => "admin"  ],
+        ["inherits" => [], "name" => "member" ],
+        ["inherits" => [], "name" => "guest"  ],
+        ["inherits" => [], "name" => "fred"   ],
+        ["inherits" => [], "name" => "bob"    ],
+        ["inherits" => [], "name" => "ken"    ]
+    ];
+    $this->assertEquals($expected, $b->build()->toArray());
+  }
+
+  public function testRollCollectionWithInherits() {
+    $b = new Role\CollectionBuilder();
+    $b->addRolesFromArray(self::ROLES_WITH_INHERITS);
+
+    $expected = [
+        ["inherits" => [],                  "name" => "admin"],
+        ["inherits" => [],                  "name" => "member"],
+        ["inherits" => [],                  "name" => "guest"],
+        ["inherits" => ["member"],          "name" => "fred"],
+        ["inherits" => ["member","admin"],  "name" => "bob"],
+        ["inherits" => ["member", "admin"], "name" => "ken"]
+    ];
+    $this->assertEquals($expected, $b->build()->toArray());
+  }
+
   protected function assertRoleInherits($roleName, $inherits) {
     $role = $this->builder->getRole($roleName);
     $this->assertArrayValuesEqual($inherits, $role->inherits());

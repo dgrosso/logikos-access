@@ -3,10 +3,10 @@
 
 namespace Logikos\Access\Acl\Role;
 
-use Logikos\Access\Acl\Role;
+use Logikos\Access\Acl\Role as RoleInterface;
 
 class CollectionBuilder {
-  /** @var Role\Role[] */
+  /** @var Role[] */
   private $roles = [];
 
   public function addRole($role) {
@@ -16,14 +16,14 @@ class CollectionBuilder {
   }
 
   public function addRoleWithInherits($roleName, $inherits) {
-    $this->roles[$roleName] = Role\Role::build($roleName, $inherits);
+    $this->roles[$roleName] = Role::build($roleName, $inherits);
   }
 
   public function addInherit($roleName, $inheritRoleName) {
     $role = $this->roles[$roleName];
     $inherits = $role->inherits();
     array_push($inherits, $inheritRoleName);
-    $this->roles[$roleName] = Role\Role::build($roleName, $inherits);
+    $this->roles[$roleName] = Role::build($roleName, $inherits);
   }
 
   public function roles() {
@@ -34,19 +34,19 @@ class CollectionBuilder {
     return array_key_exists($roleName, $this->roles);
   }
 
-  public function getRole($roleName): Role\Role {
+  public function getRole($roleName): RoleInterface {
     return $this->roles[$roleName];
   }
 
-  private function makeRole($role) {
-    if ($role instanceof Role) return $role;
-    if (is_string($role)) return Role\Role::build($role);
+  private function makeRole($role): RoleInterface {
+    if ($role instanceof RoleInterface) return $role;
+    if (is_string($role)) return Role::build($role);
     if (is_array($role)) {
       $name = $role['name'] ?? $role['role'];
       $inherits = array_key_exists('inherits', $role) ? $role['inherits'] : [];
-      return Role\Role::build($name, $inherits);
+      return Role::build($name, $inherits);
     }
-    return new Role\Role;
+    return new Role;
   }
 
   public function addRolesFromTraversable(\Traversable $roles) {
@@ -62,9 +62,9 @@ class CollectionBuilder {
   }
 
   /**
-   * @return \Logikos\Access\Acl\BaseCollection|Role[]
+   * @return Collection|Role[]
    */
   public function build() {
-    return Role\Collection::fromArray($this->roles);
+    return Collection::fromArray($this->roles);
   }
 }
