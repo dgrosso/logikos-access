@@ -37,6 +37,15 @@ class TestCase extends AccessTestCase {
       ['role' => 'ken',  'inherits' => 'member,admin']
   ];
 
+  const ROLES_WITH_INHERITS = [
+      ['role' => 'admin'  ],
+      ['role' => 'member' ],
+      ['role' => 'guest'  ],
+      ['role' => 'fred',  'inherits' => 'member'       ],
+      ['role' => 'bob',   'inherits' => 'member,admin' ],
+      ['role' => 'ken',   'inherits' => 'member,admin' ]
+  ];
+
   /** @var Connection */
   protected $db;
 
