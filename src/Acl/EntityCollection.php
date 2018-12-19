@@ -6,15 +6,22 @@ namespace Logikos\Access\Acl;
 use Iterator;
 use Traversable;
 
-abstract class BaseCollection extends \IteratorIterator implements Iterator {
+abstract class EntityCollection extends \IteratorIterator implements Iterator {
 
   public function __construct(Traversable $iterator) {
-    if (is_object($iterator) && $iterator instanceof \PDOStatement)
-      parent::__construct(self::fromPdoStatement($iterator)->getInnerIterator());
-
-    else
-      parent::__construct($iterator);
+    parent::__construct($this->rebuildAndValidateTraversable($iterator));
   }
+
+  private function rebuildAndValidateTraversable(Traversable $t) {
+    $entities = [];
+
+    foreach ($t as $row)
+      array_push($entities, $this->buildEntity($row));
+
+    return new \ArrayIterator($entities);
+  }
+
+  abstract protected function buildEntity($row);
 
   public function toArray() {
     $rows = [];

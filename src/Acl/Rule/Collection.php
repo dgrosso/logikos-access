@@ -9,12 +9,12 @@ use Logikos\Access\Acl\Rule as RuleInterface;
 use Logikos\Access\Acl\Rule\Iterator as RuleIterator;
 use Logikos\Access\Acl\Rule\Rule as RuleEntity;
 
-class Collection extends Acl\BaseCollection implements RuleIterator {
+class Collection extends Acl\EntityCollection implements RuleIterator {
   public function current(): RuleInterface {
-    return $this->buildRule(parent::current());
+    return $this->buildEntity(parent::current());
   }
 
-  private function buildRule($row) {
+  protected function buildEntity($row) {
     if (is_a($row, RuleInterface::class))
       return $row;
 
