@@ -14,5 +14,6 @@ interface Adapter {
   public function isRole($role);
   public function isResource($resource);
 
+  public function getRoles(): Role\Collection;
   public function getResources(): Resource\Collection;
 }

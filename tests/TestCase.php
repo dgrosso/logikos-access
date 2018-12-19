@@ -40,4 +40,11 @@ class TestCase extends PHPUnitTestCase {
       Assert::assertContains($field, array_keys($e->getEntity()->validationMessages()));
     }
   }
+
+  protected function assertCanSerialize($object) {
+    Assert::assertEquals(
+        $object,
+        unserialize(serialize($object))
+    );
+  }
 }

@@ -119,5 +119,20 @@ class RoleCollectionTest extends TestCase {
     }
   }
 
+  public function testCanSerialize() {
+
+    /** @var Role\Role[] $data */
+    $data = [
+        'A' => Role\Role::build('A'),
+        'B' => Role\Role::build('B'),
+        'C' => Role\Role::build('E', ['A','B'])
+    ];
+
+    /** @var Role\Role[] $collection */
+    $collection = Collection::fromArray($data);
+
+    $this->assertCanS
+    Assert::assertEquals($collection, unserialize(serialize($collection)));
+  }
 
 }

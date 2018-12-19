@@ -6,9 +6,9 @@ namespace Logikos\Access\Acl\Adapter;
 use Logikos\Access\Acl;
 use Logikos\Access\Acl\Config;
 use Logikos\Access\Acl\Role;
+use Logikos\Access\Acl\Rule;
 use Logikos\Access\Acl\Resource;
 use Logikos\Util\Config\InvalidConfigStateException;
-use Logikos\Util\Config\MutableConfig;
 use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 
 class Phalcon Implements Acl\Adapter {
@@ -16,8 +16,17 @@ class Phalcon Implements Acl\Adapter {
   /** @var PhalconAcl */
   private $phalconAcl;
 
-  /** @var MutableConfig */
-  private $ltAclConf;
+  /** @var Role\Collection|Role[] */
+  private $roles;
+
+  /** @var Resource\Collection|Resource[] */
+  private $resources;
+
+  /** @var Rule\Collection|Rule[] */
+  private $rules;
+
+  /** @var array of roleName => [A, B, C, ...] */
+  private $inherits;
 
   public function __construct() {
     $this->phalconAcl = new PhalconAcl();
@@ -40,17 +49,16 @@ class Phalcon Implements Acl\Adapter {
     return $this->phalconAcl->isRole($role);
   }
 
+  public function getRoles(): Role\Collection {
+    return $this->roles;
+  }
+
   public function isResource($resource) {
     return $this->phalconAcl->isResource($resource);
   }
 
   public function getResources(): Resource\Collection {
-    $resources = $this->_config()->get('resources',[]);
-    return Resource\Collection::fromArray(
-        $resources instanceof \Logikos\Util\Config
-            ? $resources->toArray()
-            : $resources
-    );
+    return $this->resources;
   }
 
   public static function buildFromConfig(Config $config): Acl\Adapter {
@@ -67,56 +75,52 @@ class Phalcon Implements Acl\Adapter {
     return $self;
   }
 
-  protected function _config(): MutableConfig {
-    return $this->ltAclConf ?: $this->ltAclConf = new MutableConfig();
-  }
-
   protected static function loadRoles(Phalcon $self, Config $config) {
-    $roles = [];
-    $inherits = [];
-    foreach ($config->roles as $r) {
-      $roles[$r->name()] = $r;
+    $self->roles = Role\Collection::fromArray($config->get('roles')->toArray());
+
+    foreach ($self->roles as $r)
       $self->phalconAcl->addRole($r->name());
-    }
-    $self->_config()->set('roles', $roles);
   }
 
   protected static function loadResources(Phalcon $self, Config $config) {
-    $resources = [];
-    foreach ($config->resources as $r) {
-      $resources[$r->name()] = $r;
+    $self->resources = Resource\Collection::fromArray($config->get('resources')->toArray());
+
+    foreach ($self->resources as $r)
       $self->phalconAcl->addResource($r->name(), $r->privileges());
-    }
-    $self->_config()->set('resources', $resources);
   }
 
   protected static function loadRules(Phalcon $self, Config $config) {
-    $rules = [];
-    foreach ($config->rules as $r) {
-      $rules[$r->__toString()] = $r;
+    $self->rules = $config->has('rules')
+        ? Rule\Collection::fromArray($config->get('rules')->toArray())
+        : Rule\Collection::fromArray([]);
+
+
+    foreach ($self->rules as $r)
       $self->phalconAcl->allow($r->role(), $r->resource(), $r->privilege());
-    }
-    $self->_config()->set('rules', $rules);
   }
 
   protected static function loadInherits(Phalcon $self, Config $config) {
-    $inherits = [];
-    if ($config->has('inherits')) {
-      /** @var Acl\Inherits $i */
-      foreach ($config->inherits as $i) {
-        $iRoles = array_merge($inherits[$i->role()] ?? [], $i->inherits());
-        $inherits[$i->role()] = $iRoles;
-        foreach ($i->inherits() as $iRole)
-          $self->phalconAcl->addInherit($i->role(), $iRole);
-      }
+    $roles = [];
+
+    foreach ($config->inherits ?? [] as $i) {
+      self::appendInherits($roles, $i->role(), $i->inherits());
     }
 
-    /** @var Acl\Role $r */
-    foreach ($self->_config()->roles as $r) {
-      foreach ($r->inherits() as $iRole)
-        $self->phalconAcl->addInherit($r->name(), $iRole);
+    foreach ($self->roles as $r) {
+      self::appendInherits($roles, $r->name(), $r->inherits());
     }
+
+    foreach ($roles as $role => $iRoles)
+      foreach ($iRoles as $iRole)
+        $self->phalconAcl->addInherit($role, $iRole);
+
+    $self->inherits = $roles;
   }
+
+  protected static function appendInherits(&$roles, $roleName, $inherits) {
+    $roles[$roleName] = array_merge($roles[$roleName] ?? [], $inherits);
+  }
+
 
   protected static function validateConfig(Config $config) {
     try {

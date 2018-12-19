@@ -67,14 +67,24 @@ abstract class TestCase extends AclTestCase {
     }
   }
 
+  public function testGetRoles() {
+    $acl = $this->acl();
+    $roles = $acl->getRoles();
+    Assert::assertInstanceOf(Role\Collection::class, $roles);
+    Assert::assertCount(count(self::ROLES), $roles);
+  }
 
   public function testGetResources() {
     $acl = $this->acl();
     $resources = $acl->getResources();
     Assert::assertInstanceOf(Resource\Collection::class, $resources);
-    Assert::assertSame(count(self::RESOURCES), count($resources->toArray()));
+    Assert::assertCount(count(self::RESOURCES), $resources);
   }
 
+  public function testCanSerialize() {
+    $acl = $this->acl();
+    $this->assertCanSerialize($acl);
+  }
 
   protected function assertIsAllowed(Adapter $acl, $role, $resource, $privilege) {
     Assert::assertTrue(
