@@ -23,7 +23,6 @@ class EntityCollectionTest extends TestCase {
     Assert::assertEquals($collection, unserialize(serialize($collection)));
   }
 
-
   public function testBuildFromPdoStatement() {
     $roles = ['admin', 'member', 'guest'];
     $this->addRoles(...$roles);
@@ -64,5 +63,33 @@ class EntityCollectionTest extends TestCase {
     foreach ($collection as $resource) {
       Assert::assertInstanceOf(Role::class, $resource);
     }
+  }
+
+  public function testFindEntity() {
+    $data = [
+        ['role'=>'admin'],
+        ['role'=>'member'],
+        ['role'=>'guest', 'description'=>'foo'],
+    ];
+    $collection = Role\Collection::fromArray($data);
+
+    $role = $collection->find(function (Role $role) {
+      return $role->name() == 'member';
+    });
+
+    Assert::assertSame('member', $role->name());
+  }
+
+  public function testFindEntityByToStringValue() {
+    $data = [
+        ['role'=>'admin'],
+        ['role'=>'member'],
+        ['role'=>'guest', 'description'=>'foo'],
+    ];
+    $collection = Role\Collection::fromArray($data);
+
+    $role = $collection->findByString('guest');
+
+    Assert::assertSame('guest', $role->name());
   }
 }

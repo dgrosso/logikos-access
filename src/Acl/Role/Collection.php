@@ -13,14 +13,6 @@ class Collection extends EntityCollection implements Role\Iterator {
     return $this->buildEntity($row);
   }
 
-  /** @return Role|null */
-  public function find($name) {
-    foreach ($this as $entity) {
-      if ($entity->__toString() == $name)
-        return $entity;
-    }
-  }
-
   protected function buildEntity($row) {
     if (is_a($row, Role::class))
       return $row;
