@@ -131,7 +131,6 @@ class RoleCollectionTest extends TestCase {
     /** @var Role\Role[] $collection */
     $collection = Collection::fromArray($data);
 
-    $this->assertCanS
     Assert::assertEquals($collection, unserialize(serialize($collection)));
   }
 
