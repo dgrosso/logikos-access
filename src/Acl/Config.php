@@ -13,11 +13,11 @@ use Logikos\Util\Validation\Validator;
 /**
  * Class Config
  * @package Logikos\Access\Acl
- * @property Resource\Iterator $resources
- * @property Role\Iterator     $roles
- * @property Rule\Iterator     $rules
- * @property Inherits\Iterator $inherits
- * @property int               $defaultAction
+ * @property Resource\Iterator|Resource[] $resources
+ * @property Role\Iterator|Role[]         $roles
+ * @property Rule\Iterator|Rule[]         $rules
+ * @property Inherits\Iterator|Inherits[] $inherits
+ * @property int                          $defaultAction
  */
 class Config extends StrictConfig {
 
