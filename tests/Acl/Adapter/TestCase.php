@@ -16,8 +16,8 @@ use LogikosTest\Access\Acl\TestCase as AclTestCase;
 use PHPUnit\Framework\Assert;
 
 abstract class TestCase extends AclTestCase {
-  /** @return Adapter */
-  abstract protected function acl();
+
+  abstract protected function acl(Acl\Config $config=null): Adapter;
 
   public function test_BuildFromConfig_ValidatesConfig() {
     $this->expectException(ConfigException::class);
@@ -51,6 +51,15 @@ abstract class TestCase extends AclTestCase {
       $this->assertIsAllowed($acl, $r['role'], $r['resource'], $r['privilege']);
       $this->assertIsNotAllowed($acl, 'guest', $r['resource'], $r['privilege']);
     }
+    Assert::assertCount(count(self::RULES), $acl->getRules());
+  }
+
+  public function testDoesNotBreakWhenNoRulesInConfig() {
+    $config = new Acl\Config();
+    $config->withRoles(Role\Collection::fromArray(self::ROLES));
+    $config->withResources(Resource\Collection::fromArray(self::RESOURCES));
+    $acl = $this->acl($config);
+    Assert::assertCount(0, $acl->getRules());
   }
 
   public function testAclLoadsInheritedRoles() {
@@ -85,6 +94,46 @@ abstract class TestCase extends AclTestCase {
     $acl = $this->acl();
     $this->assertCanSerialize($acl);
   }
+
+  public function testGetGrantsForRole() {
+    $config = new Acl\Config;
+    $config->withRoles(Role\Collection::fromArray(self::ROLES));
+    $config->withResources(Resource\Collection::fromArray([
+        ['resource' => 'dashboard', 'privileges' => ['login','add-widget']],
+        ['resource' => 'reports',   'privileges' => ['read','schedule']]
+    ]));
+    $config->withRules(Rule\Collection::fromArray([
+        ['role' => 'guest',  'resource' => 'dashboard', 'privilege' => 'login'],
+        ['role' => 'member', 'resource' => 'dashboard', 'privilege' => 'login'],
+        ['role' => 'member', 'resource' => 'reports',   'privilege' => 'read'],
+        ['role' => 'admin',  'resource' => 'reports',   'privilege' => 'read'],
+        ['role' => 'admin',  'resource' => 'reports',   'privilege' => 'schedule']
+    ]));
+    $config->withInherits(Inherits\Collection::fromArray([
+        ['role' => 'admin', 'inherits' => 'member'],
+        ['role' => 'admin', 'inherits' => 'guest']
+    ]));
+    $acl = $this->acl($config);
+
+    Assert::assertEquals(
+        [
+            ['resource'=>'reports', 'privilege'=>'read'],
+            ['resource'=>'reports', 'privilege'=>'schedule']
+        ],
+        $acl->getDirectGrantsForRole('admin')
+    );
+
+    Assert::assertEquals(
+        [
+            ['resource'=>'dashboard', 'privilege'=>'login',    'via'=>['member','guest']],
+            ['resource'=>'reports',   'privilege'=>'read',     'via'=>['member']],
+            ['resource'=>'reports',   'privilege'=>'schedule', 'via'=>[]]
+        ],
+        $acl->getGrantsForRole('admin')
+    );
+
+  }
+
 
   protected function assertIsAllowed(Adapter $acl, $role, $resource, $privilege) {
     Assert::assertTrue(
