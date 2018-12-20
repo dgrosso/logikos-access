@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a926cb9be00a85dbd62995f08e5a180",
-    "content-hash": "0887b0d3778cc0621168243426c77fbe",
+    "hash": "b773cafeef8347fdfbb58309a39dd5f4",
+    "content-hash": "074a60885b9f34ffc30964f7661b3769",
     "packages": [
         {
             "name": "logikos/database",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/logikostech/database.git",
                 "reference": "62ac526d836a0538bb7d884c7d5ce1cefb81c0e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/logikostech/database/zipball/62ac526d836a0538bb7d884c7d5ce1cefb81c0e9",
+                "reference": "62ac526d836a0538bb7d884c7d5ce1cefb81c0e9",
+                "shasum": ""
             },
             "require": {
                 "logikos/util": "^2.2",
@@ -29,16 +35,7 @@
                     "Logikos\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "LogikosTest\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "vendor/bin/phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2822,9 +2819,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "logikos/database": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
