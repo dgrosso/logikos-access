@@ -54,6 +54,7 @@ class ResourceCollectionTest extends TestCase {
         ['resource'=>'reports',   'privileges'=>'view,schedule'],
         ['resource'=>'members']
     ];
+
     $collection = ResourceCollection::fromArray($data);
 
     $found = [];

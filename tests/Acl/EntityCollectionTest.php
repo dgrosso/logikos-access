@@ -80,6 +80,17 @@ class EntityCollectionTest extends TestCase {
     Assert::assertSame('member', $role->name());
   }
 
+  public function testFindWhenNotThere() {
+
+    $collection = Role\Collection::fromArray([
+        ['role'=>'admin']
+    ]);
+
+    $result = $collection->find(function (){return false;});
+
+    Assert::assertNull($result);
+  }
+
   public function testFindEntityByToStringValue() {
     $data = [
         ['role'=>'admin'],

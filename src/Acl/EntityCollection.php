@@ -34,11 +34,12 @@ abstract class EntityCollection extends \IteratorIterator implements Iterator {
   }
 
   public function findByString($string) {
-    return $this->find(function ($entity) use ($string) {
-      if (method_exists($entity, '__toString'))
-        return (string) $entity === $string;
-      return false;
-    });
+    return $this->find(
+        function ($entity) use ($string) {
+          return method_exists($entity, '__toString')
+              && $entity->__toString() === $string;
+        }
+    );
   }
 
   public function toArray() {
