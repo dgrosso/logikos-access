@@ -33,6 +33,20 @@ class Phalcon Implements Acl\Adapter {
     $this->setDefaultAction(Acl::DENY);
   }
 
+  public static function buildFromConfig(Config $config): Acl\Adapter {
+    self::validateConfig($config);
+
+    $self = new static();
+    $self->setDefaultAction($config->defaultAction);
+
+    self::loadRoles($self, $config);
+    self::loadResources($self, $config);
+    self::loadRules($self, $config);
+    self::loadInherits($self, $config);
+
+    return $self;
+  }
+
   public function setDefaultAction($action) {
     $this->phalconAcl->setDefaultAction($action);
   }
@@ -61,18 +75,50 @@ class Phalcon Implements Acl\Adapter {
     return $this->resources;
   }
 
-  public static function buildFromConfig(Config $config): Acl\Adapter {
-    self::validateConfig($config);
+  public function getRules(): Rule\Collection {
+    return $this->rules;
+  }
 
-    $self = new static();
-    $self->setDefaultAction($config->defaultAction);
+  public function getDirectGrantsForRole($role) {
+    $grants = [];
+    $roleName = (string) $role; // makes it compatable with RoleEntity object
+    foreach ($this->rules as $rule) {
+      if ($rule->access() == ACL::ALLOW && $rule->role() == $roleName) {
+        $grants[] = [
+            'resource'  => $rule->resource(),
+            'privilege' => $rule->privilege()
+        ];
+      }
+    }
+    return $grants;
+  }
 
-    self::loadRoles($self, $config);
-    self::loadResources($self, $config);
-    self::loadRules($self, $config);
-    self::loadInherits($self, $config);
+  public function getGrantsForRole($role) {
+    $grants = [];
+    $roleName = (string) $role; // makes it compatable with RoleEntity object
+    foreach ($this->resources as $resource) {
+      foreach ($resource->privileges() as $privilege) {
+        if ($this->isAllowed($roleName, $resource->name(), $privilege)) {
+          $grants[] = [
+              'resource' => $resource->name(),
+              'privilege' => $privilege,
+              'via' => $this->grantVia($roleName, $resource->name(), $privilege)
+          ];
+        }
+      }
+    }
+    return $grants;
+  }
 
-    return $self;
+  protected function grantVia($roleName, $resourceName, $privilege) {
+    $via = [];
+    $iRoles = $this->inherits[$roleName] ?? [];
+    foreach ($iRoles as $iRole) {
+      if ($this->isAllowed($iRole, $resourceName, $privilege)) {
+        array_push($via, $iRole);
+      }
+    }
+    return $via;
   }
 
   protected static function loadRoles(Phalcon $self, Config $config) {

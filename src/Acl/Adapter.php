@@ -16,4 +16,7 @@ interface Adapter {
 
   public function getRoles(): Role\Collection;
   public function getResources(): Resource\Collection;
+
+  public function getDirectGrantsForRole($role);
+  public function getGrantsForRole($role);
 }

@@ -4,7 +4,9 @@
 namespace LogikosTest\Access\Acl\Adapter;
 
 
+use Logikos\Access\Acl\Adapter;
 use Logikos\Access\Acl\Adapter\Phalcon as Acl;
+use Logikos\Access\Acl\Config;
 use Phalcon\Acl\Adapter\Memory as PhalconAcl;
 use PHPUnit\Framework\Assert;
 
@@ -42,6 +44,8 @@ class PhalconTest extends TestCase {
     Assert::assertTrue($acl->isAllowed('admin', 'dashboard', 'login'));
   }
 
+
+
   private function phalconAcl(): PhalconAcl {
     $acl = new PhalconAcl();
 
@@ -54,7 +58,7 @@ class PhalconTest extends TestCase {
     return $acl;
   }
 
-  protected function acl() {
-    return Acl::buildFromConfig($this->AclConfig());
+  protected function acl(Config $config=null): Adapter {
+    return Acl::buildFromConfig($config ?: $this->AclConfig());
   }
 }
