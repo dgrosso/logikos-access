@@ -42,6 +42,17 @@ abstract class EntityCollection extends \IteratorIterator implements Iterator {
     );
   }
 
+  public function filter(callable $cb) {
+    $results = [];
+    foreach ($this as $entity) {
+      if (call_user_func($cb, $entity, $this)) {
+        array_push($results, $entity);
+      }
+    }
+
+    return static::fromArray($results);
+  }
+
   public function toArray() {
     $rows = [];
     foreach ($this as $entity) {

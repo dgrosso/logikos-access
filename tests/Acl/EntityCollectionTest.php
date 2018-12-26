@@ -3,6 +3,7 @@
 
 namespace LogikosTest\Access\Acl;
 
+use Logikos\Access\Acl\EntityCollection;
 use Logikos\Access\Acl\Role;
 use PHPUnit\Framework\Assert;
 
@@ -102,5 +103,31 @@ class EntityCollectionTest extends TestCase {
     $role = $collection->findByString('guest');
 
     Assert::assertSame('guest', $role->name());
+  }
+
+  public function testFilterCollection() {
+    /** @var Role\Collection|Role\Role[] $collection */
+    $collection = Role\Collection::fromArray([
+        'A' => Role\Role::build('A'),
+        'B' => Role\Role::build('B', ['A']),
+        'C' => Role\Role::build('C', ['A','B']),
+        'D' => Role\Role::build('D', ['B','C']),
+        'E' => Role\Role::build('E', ['D'])
+    ]);
+
+    $roles = $collection->filter(function (Role $role) {
+      return in_array('A', $role->inherits());
+    });
+    $this->assertInstanceOf(Role\Collection::class, $roles);
+    $this->assertCollectionContains($roles, ['B','C']);
+  }
+
+  protected function assertCollectionContains(EntityCollection $collection, array $names) {
+    $namesInCollection = [];
+    foreach ($collection as $role) array_push($namesInCollection, $role->__toString());
+
+    $this->assertCount(count($names), $namesInCollection);
+    foreach ($names as $name)
+      $this->assertContains($name, $namesInCollection);
   }
 }
