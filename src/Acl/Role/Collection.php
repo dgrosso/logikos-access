@@ -4,23 +4,23 @@
 namespace Logikos\Access\Acl\Role;
 
 use Logikos\Access\Acl\EntityCollection;
-use Logikos\Access\Acl\Role;
+use Logikos\Access\Acl\Role as RoleInterface;
 
-class Collection extends EntityCollection implements Role\Iterator {
+class Collection extends EntityCollection implements Iterator {
 
-  public function current(): Role {
+  public function current(): RoleInterface {
     $row = parent::current();
     return $this->buildEntity($row);
   }
 
   protected function buildEntity($row) {
-    if (is_a($row, Role::class))
+    if (is_a($row, RoleInterface::class))
       return $row;
 
-    return new Role\Role([
+    return new Role([
         'name'        => $row['name'] ?? $row['role'],
         'description' => $row['description'] ?? '',
-        'inherits'    => Role\Role::makeInherits($row['inherits']    ?? [])
+        'inherits'    => Role::makeInherits($row['inherits']    ?? [])
     ]);
   }
 }

@@ -6,7 +6,7 @@ namespace Logikos\Access\Acl;
 use Iterator;
 use Traversable;
 
-abstract class EntityCollection extends \IteratorIterator implements Iterator {
+abstract class EntityCollection extends \IteratorIterator implements Iterator, \Serializable {
 
   public function __construct(Traversable $iterator) {
     parent::__construct($this->rebuildAndValidateTraversable($iterator));
@@ -82,5 +82,18 @@ abstract class EntityCollection extends \IteratorIterator implements Iterator {
       array_push($rows, $row);
 
     return $rows;
+  }
+
+  public function serialize() {
+    $rows = [];
+    foreach ($this as $entity) {
+      array_push($rows, $entity);
+    }
+    return serialize($rows);
+  }
+
+  public function unserialize($serialized) {
+    $data = unserialize($serialized);
+    $this->__construct(new \ArrayIterator($data));
   }
 }

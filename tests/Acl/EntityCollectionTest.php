@@ -21,7 +21,10 @@ class EntityCollectionTest extends TestCase {
     /** @var Role\Role[] $collection */
     $collection = Role\Collection::fromArray($data);
 
-    Assert::assertEquals($collection, unserialize(serialize($collection)));
+    $u = unserialize(serialize($collection));
+    Assert::assertEquals($collection, $u);
+
+    foreach ($u as $r) Assert::assertTrue(is_array($r->inherits()));
   }
 
   public function testBuildFromPdoStatement() {

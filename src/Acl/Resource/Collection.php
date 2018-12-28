@@ -25,7 +25,7 @@ class Collection extends EntityCollection implements Iterator {
   }
 
   protected function buildEntity($row) {
-    if ($row instanceof ResourceEntity)
+    if ($row instanceof ResourceInterface)
       return $row;
 
     return new ResourceEntity([
