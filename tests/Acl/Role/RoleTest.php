@@ -3,7 +3,6 @@
 
 namespace LogikosTest\Access\Acl\Role;
 
-
 use Logikos\Access\Acl\InvalidEntityException;
 use Logikos\Access\Acl\Role\Role;
 use LogikosTest\Access\Acl\TestCase;
@@ -65,5 +64,12 @@ class RoleTest extends TestCase {
   public function testBuildWithInheritsAsCommaSeparatedList() {
     $r = Role::build('member', 'roleA,roleB');
     $this->assertArrayValuesEqual(['roleA', 'roleB'], $r->inherits());
+  }
+
+  public function testCanSerialize() {
+    $r = Role::build('member', 'roleA,roleB');
+    $ur = unserialize(serialize($r));
+
+    Assert::assertEquals($r, $ur);
   }
 }

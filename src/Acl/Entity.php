@@ -4,10 +4,13 @@
 namespace Logikos\Access\Acl;
 
 use Logikos\Access\Acl\InvalidEntityException;
+use Logikos\Util\Config\ImmutableConfig;
 use Logikos\Util\Config\InvalidConfigStateException;
 use Logikos\Util\Config\StrictConfig;
 
 abstract class Entity extends StrictConfig {
+
+
 
   public function validate() {
     try {
@@ -21,5 +24,9 @@ abstract class Entity extends StrictConfig {
   protected function initialize() {
     $this->validate();
     $this->lock();
+  }
+
+  protected function subConfig($arrayConfig = []) {
+    return new ImmutableConfig($arrayConfig);
   }
 }
