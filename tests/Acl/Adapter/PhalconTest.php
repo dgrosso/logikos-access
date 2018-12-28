@@ -59,6 +59,7 @@ class PhalconTest extends TestCase {
   }
 
   protected function acl(Config $config=null): Adapter {
-    return Acl::buildFromConfig($config ?: $this->AclConfig());
+    $acl = Acl::buildFromConfig($config ?: $this->AclConfig());
+    return unserialize(serialize($acl)); // ensures the unserialized object works as the original
   }
 }
