@@ -135,6 +135,54 @@ abstract class TestCase extends AclTestCase {
   }
 
 
+  public function test_GetRolesWithPrivilege() {
+    $config = new AclConfig;
+    $config->withRoles(Role\Collection::fromArray([
+        ['role' => 'admin'],
+        ['role' => 'member'],
+        ['role' => 'adam'],
+        ['role' => 'bill'],
+        ['role' => 'cody'],
+    ]));
+    $config->withResources(Resource\Collection::fromArray([
+        ['resource' => 'dashboard', 'privileges' => ['login','add-widget']],
+        ['resource' => 'reports',   'privileges' => ['read','schedule']]
+    ]));
+    $config->withRules(Rule\Collection::fromArray([
+        ['role' => 'admin',  'resource' => 'dashboard', 'privilege' => 'login'],
+        ['role' => 'admin',  'resource' => 'dashboard', 'privilege' => 'add-widget'],
+        ['role' => 'admin',  'resource' => 'reports',   'privilege' => 'read'],
+        ['role' => 'admin',  'resource' => 'reports',   'privilege' => 'schedule'],
+        ['role' => 'member', 'resource' => 'dashboard', 'privilege' => 'login'],
+        ['role' => 'member', 'resource' => 'reports',   'privilege' => 'read'],
+        ['role' => 'bill',   'resource' => 'dashboard', 'privilege' => 'add-widget'],
+        ['role' => 'cody',   'resource' => 'dashboard', 'privilege' => 'login'],
+    ]));
+    $config->withInherits(Inherits\Collection::fromArray([
+        ['role' => 'adam',  'inherits' => 'admin'],
+        ['role' => 'bill',  'inherits' => 'member']
+    ]));
+    $acl = $this->acl($config);
+
+
+    $this->assertArrayValuesEqual(
+        ['admin', 'member', 'adam', 'bill', 'cody'],
+        $acl->getRolesWithPrivilege('dashboard', 'login')->toArrayOfStrings()
+    );
+    $this->assertArrayValuesEqual(
+        ['admin', 'adam', 'bill'],
+        $acl->getRolesWithPrivilege('dashboard', 'add-widget')->toArrayOfStrings()
+    );
+    $this->assertArrayValuesEqual(
+        ['admin', 'member', 'adam', 'bill'],
+        $acl->getRolesWithPrivilege('reports', 'read')->toArrayOfStrings()
+    );
+    $this->assertArrayValuesEqual(
+        ['admin', 'adam'],
+        $acl->getRolesWithPrivilege('reports', 'schedule')->toArrayOfStrings()
+    );
+  }
+
   protected function assertIsAllowed(Adapter $acl, $role, $resource, $privilege) {
     Assert::assertTrue(
         $acl->isAllowed($role, $resource, $privilege),

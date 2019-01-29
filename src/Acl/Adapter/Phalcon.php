@@ -110,6 +110,20 @@ class Phalcon Implements Acl\Adapter {
     return $grants;
   }
 
+  /**
+   * @param $resource
+   * @param $privilege
+   * @return Role\Collection|Role[]
+   */
+  public function getRolesWithPrivilege($resource, $privilege): Role\Collection {
+    $acl = $this;
+    return $this->roles->filter(
+        function(Role $role) use($acl, $resource, $privilege) {
+          return $this->isAllowed(strval($role), $resource, $privilege);
+        }
+    );
+  }
+
   protected function grantVia($roleName, $resourceName, $privilege) {
     $via = [];
     $iRoles = $this->inherits[$roleName] ?? [];

@@ -20,4 +20,5 @@ interface Adapter {
 
   public function getDirectGrantsForRole($role);
   public function getGrantsForRole($role);
+  public function getRolesWithPrivilege($resource, $privilege): Role\Collection;
 }
