@@ -125,6 +125,18 @@ class EntityCollectionTest extends TestCase {
     $this->assertCollectionContains($roles, ['B','C']);
   }
 
+  public function testArrayMap() {
+    $collection = Role\Collection::fromArray([
+        'A' => Role\Role::build('A'),
+        'B' => Role\Role::build('B', ['A']),
+        'C' => Role\Role::build('C', ['A','B']),
+    ]);
+    $this->assertArrayValuesEqual(
+        ['A','B','C'],
+        $collection->arrayMap('strval')
+    );
+  }
+
   protected function assertCollectionContains(EntityCollection $collection, array $names) {
     $namesInCollection = [];
     foreach ($collection as $role) array_push($namesInCollection, $role->__toString());

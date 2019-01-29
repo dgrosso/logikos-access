@@ -61,6 +61,18 @@ abstract class EntityCollection extends \IteratorIterator implements Iterator, \
     return $rows;
   }
 
+  public function toArrayOfStrings() {
+    return $this->arrayMap('strval');
+  }
+
+  public function arrayMap(callable $callable) {
+    $array = [];
+    foreach ($this as $entity) {
+      array_push($array, call_user_func($callable, $entity));
+    }
+    return $array;
+  }
+
   public static function fromPdoStatement(\PDOStatement $sth) {
     return self::fromArray(self::PdoSthToArray($sth));
   }
