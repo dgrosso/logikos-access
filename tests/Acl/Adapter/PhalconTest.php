@@ -50,7 +50,7 @@ class PhalconTest extends TestCase {
     $acl = new PhalconAcl();
 
     foreach (self::RESOURCES as $resource)
-      $acl->addResource($resource['resource'], $resource['privileges']);
+      $acl->addComponent($resource['resource'], $resource['privileges']);
 
     foreach (self::ROLES as $role)
       $acl->addRole($role['role']);

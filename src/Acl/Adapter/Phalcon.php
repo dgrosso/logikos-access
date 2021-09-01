@@ -9,7 +9,7 @@ use Logikos\Access\Acl\Role;
 use Logikos\Access\Acl\Rule;
 use Logikos\Access\Acl\Resource;
 use Logikos\Util\Config\InvalidConfigStateException;
-use Phalcon\Acl\Adapter\Memory as PhalconAcl;
+use \Phalcon\Acl\Adapter\Memory as PhalconAcl;
 
 class Phalcon Implements Acl\Adapter {
 
@@ -68,7 +68,7 @@ class Phalcon Implements Acl\Adapter {
   }
 
   public function isResource($resource) {
-    return $this->phalconAcl->isResource($resource);
+    return $this->phalconAcl->isComponent($resource);
   }
 
   public function getResources(): Resource\Collection {
@@ -146,7 +146,7 @@ class Phalcon Implements Acl\Adapter {
     $self->resources = Resource\Collection::fromArray($config->get('resources')->toArray());
 
     foreach ($self->resources as $r)
-      $self->phalconAcl->addResource($r->name(), $r->privileges());
+      $self->phalconAcl->addComponent($r->name(), $r->privileges());
   }
 
   protected static function loadRules(Phalcon $self, Config $config) {
